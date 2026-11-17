@@ -1,8 +1,8 @@
 import pyxel
-from projet_jeu import Jeu
+from PROJET_JEU_PRINCIPAL import Jeu
 
 class Menu:
-    def __init__(self): # Affiche le titre # Récupère le fond du menu # Récupère le fond pour le jeu # Affiche la souris dans pyxel # Affichage du menu # Affichage du menu
+    def __init__(self):
         pyxel.init(256, 256, title="SPACE DEFENDER")
         pyxel.load("images.pyxres")
         pyxel.images[1].load(0, 0, "fond_menu.png")
@@ -14,28 +14,38 @@ class Menu:
 
     def update(self):
         if self.etat == "menu":
-            # Bouton JOUER
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
-                if 58 <= pyxel.mouse_x <= 198 and 105 <= pyxel.mouse_y <= 135:          # Emplacement de la souris
-                    self.jeu_instance = Jeu()
-                    self.etat = "jeu"                           # Lancement de jeu
-                # Bouton COMMENT JOUER
-                elif 58 <= pyxel.mouse_x <= 198 and 148 <= pyxel.mouse_y <= 178:        # Emplacement de la souris
-                    self.etat = "commandes"                     # Lancement de commande
+                if 58 <= pyxel.mouse_x <= 198 and 105 <= pyxel.mouse_y <= 135:
+                    self.etat = "intro"
+                    self.temps_intro = pyxel.frame_count
+                elif 58 <= pyxel.mouse_x <= 198 and 148 <= pyxel.mouse_y <= 178:
+                    self.etat = "commandes"
+
         elif self.etat == "commandes":
             if pyxel.btnp(pyxel.KEY_Q):
                 self.etat = "menu"
+
+        elif self.etat == "intro":
+            if pyxel.frame_count - self.temps_intro >= 120:
+                self.jeu_instance = Jeu()
+                self.etat = "jeu"
+
         elif self.etat == "jeu":
             self.jeu_instance.update()
 
     def draw(self):
         if self.etat == "menu":
-            # Affichage du fond du menu
-            pyxel.blt(0, 0, 0, 0, 0, 256, 256)                  # Affichage du fond du menu
+            pyxel.blt(0, 0, 1, 0, 0, 256, 256)
             self.menu()
+
         elif self.etat == "commandes":
-            pyxel.blt(0, 0, 1, 0, 0, 256, 256)                  # Affichage du fond du jeu
+            pyxel.cls(0)
             self.commandes()
+
+        elif self.etat == "intro":
+            pyxel.cls(0)
+            pyxel.text(9, 120, "PUISSE LE SORT VOUS ETRE FAVORABLE DURANT CE LONG PERIPLE...", 11)
+
         elif self.etat == "jeu":
             self.jeu_instance.draw()
 
@@ -55,19 +65,19 @@ class Menu:
 
     def commandes(self):
         #Les titres
-        pyxel.text(95, 40, "Histoire", 11)                      # x, y, titre, couleur
+        pyxel.text(95, 40, "Histoire", 15)                      # x, y, titre, couleur
         pyxel.text(95, 100, "Commandes", 11)                     # x, y, titre, couleur
 
         #L'histoire du jeu
-        pyxel.text(20, 60, "Ce jeu est l'histoire d'un ", 8)
-        pyxel.text(20, 67,"vaisseau spatial qui doit detruire les asteroides pour", 8)
-        pyxel.text(20, 74, "se proteger, durant son long, tres long trajet...", 8)
+        pyxel.text(20, 60, "Ce jeu est l'histoire d'un ", 7)
+        pyxel.text(20, 67,"vaisseau spatial qui doit detruire les asteroides pour", 7)
+        pyxel.text(20, 74, "se proteger, durant son long, tres long voyage...", 7)
 
         #Les touches
-        pyxel.text(55, 120, "FLECHES : DEPLACER", 10)           # x, y, titre, couleur
-        pyxel.text(55, 140, "ESPACE : TIRER", 10)               # x, y, titre, couleur
-        pyxel.text(55, 160, "'Q' : RETOUR", 10)                 # x, y, titre, couleur
-        pyxel.text(55, 200, "ECHAP : QUITTER", 6)               # x, y, titre, couleur
+        pyxel.text(55, 120, "FLECHES : DEPLACER", 7)           # x, y, titre, couleur
+        pyxel.text(55, 140, "ESPACE : TIRER", 7)               # x, y, titre, couleur
+        pyxel.text(55, 160, "'Q' : RETOUR", 7)                 # x, y, titre, couleur
+        pyxel.text(55, 200, "ECHAP : QUITTER", 7)               # x, y, titre, couleur
 
     def jeu(self):
         pyxel.text(105, 120, "BONNE CHANCE !", 11)              # x, y, titre, couleur
